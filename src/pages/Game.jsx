@@ -19,7 +19,7 @@ export default function Game() {
     players.forEach((player) => {
       const guessed = Number(guesses[player]) || 0;
       const obtained = Number(scores[player]) || 0;
-      const finalScore = obtained >= (guessed+obtained)/2 ? obtained : 0;
+      const finalScore = obtained >= guessed ? (guessed*1.0+obtained*1.0)/2.0 : 0;
 
       roundScores[player] = finalScore;
       setTotalScores((prev) => ({

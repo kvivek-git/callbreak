@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { databases, ID } from "../appwrite"; // Import Appwrite SDK
 
 export default function Home() {
   const [players, setPlayers] = useState([""]);
@@ -13,21 +12,16 @@ export default function Home() {
       // Initialize scores to zero for each player
       const scores = players.map(() => 0);
 
-      // Create a new game document in Appwrite with players and scores
-      // const response = await databases.createDocument(
-      //   "--", // Database ID
-      //   "--", // Collection ID
-      //   ID.unique(),
-      //   { name: players, score: scores } // Store both players and their scores
-      // );
-
-      // console.log("Game created:", response);
-
       // Navigate to the game page with gameId
-      navigate("/game", { state: { players, scores} });
+      navigate("/game", { state: { players, scores } });
     } catch (error) {
       console.error("Error creating game:", error);
     }
+  };
+
+  const handleRemovePlayer = (index) => {
+    if (players.length === 1) return; // Prevent removing the last player
+    setPlayers(players.filter((_, i) => i !== index));
   };
 
   return (
@@ -35,17 +29,24 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-5">Call Break Score Tracker</h1>
       <div className="w-full max-w-md space-y-3">
         {players.map((player, index) => (
-          <input
-            key={index}
-            className="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white"
-            placeholder={`Player ${index + 1} Name`}
-            value={player}
-            onChange={(e) => {
-              const newPlayers = [...players];
-              newPlayers[index] = e.target.value;
-              setPlayers(newPlayers);
-            }}
-          />
+          <div key={index} className="flex items-center space-x-2">
+            <input
+              className="flex-1 p-2 rounded bg-gray-800 border border-gray-600 text-white"
+              placeholder={`Player ${index + 1} Name`}
+              value={player}
+              onChange={(e) => {
+                const newPlayers = [...players];
+                newPlayers[index] = e.target.value;
+                setPlayers(newPlayers);
+              }}
+            />
+            <button
+              className="bg-red-500 p-2 rounded text-white"
+              onClick={() => handleRemovePlayer(index)}
+            >
+              ✕
+            </button>
+          </div>
         ))}
         <button
           className="w-full bg-green-500 p-2 rounded"
