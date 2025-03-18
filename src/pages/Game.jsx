@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { LuCrown } from "react-icons/lu";
 
 export default function Game() {
   const { state } = useLocation();
@@ -87,11 +88,11 @@ export default function Game() {
       )}
 
       {/* Game History */}
-      <div className="bg-gray-800 p-3 rounded mb-5">
+      <div className="bg-gray-800 p-2 rounded mb-5">
         <h2 className="text-lg font-semibold">Game History</h2>
         {history.map((round, index) => (
           <div key={index} className="p-2 border-b border-gray-700">
-            <strong>Round {index + 1}</strong>:
+            <strong>{index + 1}</strong>:
             {Object.entries(round).map(([player, points]) => (
               <span key={player} className="ml-2">
                 {player}: {points} pts
@@ -111,7 +112,11 @@ export default function Game() {
               className="relative bg-gray-700 text-white p-4 rounded-lg shadow-md text-center"
             >
               <span className="absolute top-2 right-2 bg-blue-500 text-l px-2 py-1 rounded-full">
-                {index + 1}
+              {index === 0 ? (
+                  <LuCrown className="w-6 h-6" />
+                ) : (
+                  index + 1
+                )}
               </span>
               <strong className="block text-lg">{player}</strong>
               <p className="text-sm">{total} pts</p>
