@@ -8,5 +8,3 @@ const useGameStore = create((set) => ({
     set({ players, stake, scores: Array(players.length).fill(0) }),
   updateScores: (newScores) => set({ scores: newScores }),
 }));
-
-export default useGameStore;
