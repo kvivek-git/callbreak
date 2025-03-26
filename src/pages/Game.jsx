@@ -23,7 +23,6 @@ export default function Game() {
   }, [topScorer]);
 
   const handleLockGuesses = () => {
-    // Check if all guesses are valid (non-empty and >= 1)
     for (const player of players) {
       const guessed = Number(guesses[player]);
 
@@ -37,7 +36,6 @@ export default function Game() {
   };
 
   const handleSubmitRound = () => {
-    // Check if any obtained score input is empty
     for (const player of players) {
       const obtained = scores[player];
 
@@ -53,7 +51,7 @@ export default function Game() {
     players.forEach((player) => {
       const guessed = Number(guesses[player]) || 0;
       const obtained = Number(scores[player]) || 0;
-      const finalScore = obtained >= guessed ? (guessed + obtained) / 2.0 : 0;
+      const finalScore = obtained >= guessed ? (guessed + obtained) / 2.0 : -guessed;
 
       roundScores[player] = finalScore;
       setTotalScores((prev) => ({
@@ -68,7 +66,6 @@ export default function Game() {
     setGuesses({});
     setIsLocked(false);
 
-    // Determine top scorer for toast notification
     const updatedScores = { ...totalScores };
     players.forEach((player) => {
       updatedScores[player] += roundScores[player];
@@ -78,7 +75,7 @@ export default function Game() {
   };
 
   return (
-    <div className="h-screen p-5 bg-gray-900 text-white relative">
+    <div className="min-h-screen p-5 bg-gray-900 text-white relative overflow-hidden">
       <h1 className="text-2xl font-bold text-center mb-5">Game Score Tracker</h1>
 
       {topScorer && (
@@ -112,11 +109,7 @@ export default function Game() {
               className="relative bg-gray-700 text-white p-4 rounded-lg shadow-md text-center"
             >
               <span className="absolute top-2 right-2 bg-blue-500 text-l px-2 py-1 rounded-full">
-              {index === 0 ? (
-                  <LuCrown className="w-6 h-6" />
-                ) : (
-                  index + 1
-                )}
+                {index === 0 ? <LuCrown className="w-6 h-6" /> : index + 1}
               </span>
               <strong className="block text-lg">{player}</strong>
               <p className="text-sm">{total} pts</p>
@@ -129,27 +122,21 @@ export default function Game() {
         {players.map((player, index) => (
           <div key={index} className="flex items-center space-x-3">
             <span className="w-24">{player}</span>
-            {/* Guessed Points (disabled if locked) */}
             <input
               type="number"
               className="p-2 bg-gray-800 border border-gray-600 text-white rounded w-20"
               placeholder="Guess"
               value={guesses[player] || ""}
-              onChange={(e) =>
-                setGuesses({ ...guesses, [player]: e.target.value })
-              }
+              onChange={(e) => setGuesses({ ...guesses, [player]: e.target.value })}
               min="1"
               disabled={isLocked}
             />
-            {/* Obtained Points (enabled only after locking) */}
             <input
               type="number"
               className="p-2 bg-gray-800 border border-gray-600 text-white rounded w-20"
               placeholder="Obtained"
               value={scores[player] || ""}
-              onChange={(e) =>
-                setScores({ ...scores, [player]: e.target.value })
-              }
+              onChange={(e) => setScores({ ...scores, [player]: e.target.value })}
               disabled={!isLocked}
             />
           </div>
@@ -157,17 +144,11 @@ export default function Game() {
 
         {/* Lock / Submit Button */}
         {isLocked ? (
-          <button
-            className="w-full bg-green-500 p-2 rounded mt-3"
-            onClick={handleSubmitRound}
-          >
+          <button className="w-full bg-green-500 p-2 rounded mt-3" onClick={handleSubmitRound}>
             Submit Round
           </button>
         ) : (
-          <button
-            className="w-full bg-yellow-500 p-2 rounded mt-3"
-            onClick={handleLockGuesses}
-          >
+          <button className="w-full bg-yellow-500 p-2 rounded mt-3" onClick={handleLockGuesses}>
             Lock Guesses
           </button>
         )}
